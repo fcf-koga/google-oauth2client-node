@@ -27,8 +27,6 @@ Google認証におけるOAuth2.0の認可コードフローをNode.jsで実装
 Google認証におけるOAuth2.0の認可コードフローをNode.jsで実装
 OAuth2.0の勉強が目的のためOAuthライブラリは使わずに実装しました。
 
-<p align="right">(<a href="#top">トップへ</a>)</p>
-
 ## 環境
 
 <!-- 言語、フレームワーク、ミドルウェア、インフラの一覧とバージョンを記載 -->
@@ -39,13 +37,12 @@ OAuth2.0の勉強が目的のためOAuthライブラリは使わずに実装し�
 
 その他のパッケージのバージョンは package.json を参照してください
 
-<p align="right">(<a href="#top">トップへ</a>)</p>
-
 ## ディレクトリ構成
 
 <!-- Treeコマンドを使ってディレクトリ構成を記載 -->
 
 ❯ tree -a -I "node_modules|.next|.git|.pytest_cache|static" -L 2
+```
 .
 ├── .eslintrc
 ├── .gitignore
@@ -56,6 +53,7 @@ OAuth2.0の勉強が目的のためOAuthライブラリは使わずに実装し�
 ├── requestHandlers.js
 ├── router.js
 └── server.js
+```
 
 <p align="right">(<a href="#top">トップへ</a>)</p>
 
@@ -65,21 +63,21 @@ OAuth2.0の勉強が目的のためOAuthライブラリは使わずに実装し�
 ### モジュールのインストール
 ```
 npm install
-
 ```
 ### シークレット情報の設定
 requestHandlers.jsの下記定数に、GoogleのクライアントIDおよびシークレットを設定
+
 `const client_id = "クライアントID"`
 `const client_secret = "シークレットID"`
 
 ### 承認済みリダイレクトURIの設定
 Googleコンソール画面のクライアントID登録画面の承認済みのリダイレクトURI情報に書きを登録
+
 `http://localhost:8080/callback`
 
 ### サーバ起動
 ```
 npm run test
-
 ```
 
 ### 動作確認

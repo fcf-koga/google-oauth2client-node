@@ -1,0 +1,22 @@
+{
+  "name": "google-oauth2client-node",
+  "version": "1.0.0",
+  "description": "Google認証におけるOAuth2.0の認可コードフローをNode.jsで実装",
+  "main": "index.js",
+  "scripts": {
+    "test": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fcf-koga/google-oauth2client-node.git"
+  },
+  "author": "fcf-koga",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/fcf-koga/google-oauth2client-node/issues"
+  },
+  "homepage": "https://github.com/fcf-koga/google-oauth2client-node#readme",
+  "devDependencies": {
+    "eslint-plugin-node": "^11.1.0"
+  }
+}

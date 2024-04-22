@@ -1,14 +1,15 @@
 const querystring = require('querystring')
 const url = require('url')
 
-const GOOGLE_DISCOVERY_URL = 'https://accounts.google.com/.well-known/openid-configuration'
-const redirect_uri = "http://localhost:8080/callback"
-const client_id = "クライアントID"
-const client_secret = "シークレットID"
+const DISCOVERY_URL = "https://accounts.google.com/"
+const DISCOVERY_ENDPOINT = DISCOVERY_URL + ".well-known/openid-configuration"
+const REDIRECT_URI = "http://localhost:8080/callback"
+const CLIENT_ID = "クライアントID"
+const CLIENT_SECRET = "シークレットID"
 
 function start (request,response, postData) {
   console.log("Request handler 'start' was called.")
-  const body = '<html>' +
+  const contents = '<html>' +
     '<head>' +
     '<meta http-equiv="Content-Type" content="text/html; ' +
     'charset=UTF-8" />' +
@@ -21,23 +22,23 @@ function start (request,response, postData) {
     '</html>'
 
   response.writeHead(200, { 'Content-Type': 'text/html' })
-  response.write(body)
+  response.write(contents)
   response.end()
 }
 
 async function oauth2 (request,response, postData) {
   console.log("Request handler 'oauth2' was called.")
   // ディスカバリドキュメントからベース URI（認証エンドポイント）を取得する。
-  const resp = await fetch(GOOGLE_DISCOVERY_URL);
-  const google_provider_cfg = await resp.json();
-  const authorization_endpoint = google_provider_cfg['authorization_endpoint']
+  const resp = await fetch(DISCOVERY_ENDPOINT);
+  const provider_cfg = await resp.json();
+  const authorization_endpoint = provider_cfg['authorization_endpoint']
 
   // 認証リクエスト用のパラメータの設定
   const params = {
-    client_id: client_id,
+    client_id: CLIENT_ID,
     response_type: "code",
     scope: ["openid email profile"],
-    redirect_uri: redirect_uri,
+    redirect_uri: REDIRECT_URI,
     prompt: "select_account",
   };
   const query = new URLSearchParams(params);
@@ -54,25 +55,29 @@ async function callback (request,response, postData) {
   const code = querystring.parse(query).code;
 
   // ディスカバリドキュメントからトークンエンドポイントを取得する。
-  const res_discovery = await fetch(GOOGLE_DISCOVERY_URL);
-  const google_provider_cfg = await res_discovery.json();
-  const authorization_endpoint = google_provider_cfg['token_endpoint']
+  const resp = await fetch(DISCOVERY_ENDPOINT);
+  const provider_cfg = await resp.json();
+  const authorization_endpoint = provider_cfg['token_endpoint']
 
   // アクセストークンリクエストボディの設定
-  const formData = new FormData()
-  formData.append("code", code)
-  formData.append("client_id", client_id)
-  formData.append("client_secret", client_secret)
-  formData.append("redirect_uri", redirect_uri)
-  formData.append("grant_type", "authorization_code")
+  const body = new URLSearchParams({
+    "code": code,
+    "client_id": CLIENT_ID,
+    "client_secret": CLIENT_SECRET,
+    "redirect_uri": REDIRECT_URI,
+    "grant_type": "authorization_code",
+  });
 
   const resp_token = await fetch(authorization_endpoint, {
     method: "POST",
-    body: formData,
+    headers:{
+      "Content-Type":"application/x-www-form-urlencoded",
+    },
+    body,
   })
   const token = await resp_token.json();
 
-  const body = '<html>' +
+  const contents = '<html>' +
   '<head>' +
   '<meta http-equiv="Content-Type" content="text/html; ' +
   'charset=UTF-8" />' +
@@ -119,7 +124,7 @@ async function callback (request,response, postData) {
   '</html>'
 
   response.writeHead(200, { 'Content-Type': 'text/html' })
-  response.write(body)
+  response.write(contents)
   response.end()
 }
 

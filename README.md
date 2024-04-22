@@ -77,7 +77,7 @@ Googleコンソール画面のクライアントID登録画面の承認済みの
 
 ### サーバ起動
 ```
-npm run test
+npm run start
 ```
 
 ### 動作確認
